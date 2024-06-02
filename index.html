@@ -8,8 +8,15 @@
 </head>
 <style> 
     @font-face {
-      font-family: argentino;
-      src: url(https://sistemagravacao.doceweb.com.br/fontes/argentino.ttf);
+        font-family: argentino;
+        src: url(https://sistemagravacao.doceweb.com.br/fontes/argentino.ttf);
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Impedir a barra de rolagem vertical */
+        width: 100vw; /* Definir a largura do corpo da página como a largura da janela */
     }
 
     .chassi {
@@ -25,41 +32,35 @@
         -webkit-print-color-adjust: exact;
         transform: rotate(270deg) scale(-1, 1);
         display: inline-block;
-        transform-origin: center center;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(270deg) scale(-1, 1);
-        border: 1px dashed gray;
+        transform-origin: left;
+        margin-left: 50px; /* Adicionando um deslocamento de 40 pixels para a direita */
+        margin-top: 20px;
     }
 
-    #pdf-container {
-        width: 4.8cm;
-        height: 14cm;
-        position: relative;
-        border: 1px dashed gray;
-    }
 </style>
 <body>
-    <div id="pdf-container">
-        <div class="chassi">*1234ABCDddddd*</div>
-    </div>
+    <div id="pdf-container" class="chassi">*12345678*</div>
     <button onclick="generatePDF()">Download PDF</button>
 
     <script>
         function generatePDF() {
             const element = document.getElementById('pdf-container');
+            const width = element.offsetWidth; // Obtendo a largura da DIV
+
+            // Definindo a altura do corpo da página igual à largura da DIV
+            document.body.style.height = width+40 + 'px';
+
             const opt = {
                 margin: 0,
                 filename: 'documento.pdf',
                 image: { type: '', quality: 1 },
                 jsPDF: { 
                     unit: 'cm', 
-                    format: [4.8, 14],
+                    format: [4.8, width / 28.35], // Definindo a altura do PDF igual à largura da DIV
                     orientation: 'portrait'
                 }
             };
-            html2pdf().set(opt).from(element).save();
+            html2pdf().set(opt).from(document.body).save(); // Gerando PDF a partir da DIV
         }
     </script>
 </body>
